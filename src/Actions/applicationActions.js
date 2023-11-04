@@ -1,18 +1,18 @@
 import axios from "axios";
 
 import {
-  JOBS_LIST_REQUEST,
-  JOBS_LIST_FAIL,
-  JOBS_LIST_SUCCESS,
-  JOBS_CREATE_SUCCESS,
-  JOBS_CREATE_FAIL,
-  JOBS_CREATE_REQUEST,
-} from "../Constants/jobConstants";
+  APPLICATIONS_LIST_REQUEST,
+  APPLICATIONS_LIST_FAIL,
+  APPLICATIONS_LIST_SUCCESS,
+  APPLICATIONS_CREATE_SUCCESS,
+  APPLICATIONS_CREATE_FAIL,
+  APPLICATIONS_CREATE_REQUEST,
+} from "../Constants/applicationConstants";
 
-// action to list all the jobs for the hr
-export const listJobs = () => async (dispatch) => {
+// action to list all the applications for the hr
+export const listApplications = (pk) => async (dispatch) => {
   try {
-    dispatch({ type: JOBS_LIST_REQUEST });
+    dispatch({ type: APPLICATIONS_LIST_REQUEST });
 
     // get userInfo from local storage
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -27,7 +27,7 @@ export const listJobs = () => async (dispatch) => {
         },
       };
       const { data } = await axios.get(
-        "http://127.0.0.1:8000/api/jobs",
+        `http://127.0.0.1:8000/api/jobs/${pk}`,
         config
       );
       dataFinal = data;
@@ -36,13 +36,13 @@ export const listJobs = () => async (dispatch) => {
       window.location.href = "/login";
     }
     dispatch({
-      type: JOBS_LIST_SUCCESS,
+      type: APPLICATIONS_LIST_SUCCESS,
       payload: dataFinal,
     });
   } catch (error) {
     dispatch({
       // in case of error return error message
-      type: JOBS_LIST_FAIL,
+      type: APPLICATIONS_LIST_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail
@@ -51,10 +51,10 @@ export const listJobs = () => async (dispatch) => {
   }
 };
 
-// action to create a job for the hr
-export const createJobs = (input_data) => async (dispatch) => {
+// action to create a application for the hr
+export const createApplications = (input_data,job_id) => async (dispatch) => {
   try {
-    dispatch({ type: JOBS_CREATE_REQUEST });
+    dispatch({ type: APPLICATIONS_CREATE_REQUEST });
 
     // get userInfo from local storage
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -67,16 +67,17 @@ export const createJobs = (input_data) => async (dispatch) => {
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
+      console.log(input_data, job_id)
       const { data } = await axios.post(
-        "http://127.0.0.1:8000/api/jobs/create",
+        `http://127.0.0.1:8000/api/applications/create/${job_id}`,
         input_data,
         config
       );
       dispatch({
-        type: JOBS_CREATE_SUCCESS,
+        type: APPLICATIONS_CREATE_SUCCESS,
         payload: data,
       });
-      window.location.href  = `/jobs/${data.id}`
+      window.location.reload(true)
     } else {
       // redirect to login page
       window.location.href = "/login";
@@ -84,7 +85,7 @@ export const createJobs = (input_data) => async (dispatch) => {
   } catch (error) {
     dispatch({
       // in case of error return error message
-      type: JOBS_CREATE_FAIL,
+      type: APPLICATIONS_CREATE_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

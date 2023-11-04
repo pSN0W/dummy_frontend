@@ -5,7 +5,7 @@ function Job({id, title, location, created_at}) {
         <p>{title}</p>
         <p>{location}</p>
         <p>{created_at}</p>
-        <p>{id}</p>
+        <a href={`/jobs/${id}`}>{id}</a>
     </div> );
 }
 

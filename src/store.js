@@ -4,10 +4,12 @@ import { composeWithDevTools } from "redux-devtools-extension";
 
 import { hrLoginReducer } from "./Reducers/hrReducers";
 import { jobsListReducer } from "./Reducers/jobReducers";
+import { applicationsListReducer } from "./Reducers/applicationReducers";
 
 const reducer = combineReducers({
     hrLogin: hrLoginReducer,
-    jobList: jobsListReducer
+    jobList: jobsListReducer,
+    applicationList: applicationsListReducer
 })
 
 const initialState = {};
